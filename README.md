@@ -63,9 +63,6 @@ L'application sera accessible sur `http://localhost:3000`
 - `GET /games/:platform` - Filtrer par plateforme (ex: `/games/3DS`)
 - `GET /games/:platform/:year` - Filtrer par plateforme et année
 - `GET /games/:platform/:year/top3` - Top 3 des jeux par ventes
-- `POST /games/add` - Ajouter un nouveau jeu
-- `POST /games/update/:id` - Mettre à jour un jeu
-- `POST /games/delete/:id` - Supprimer un jeu
 
 ## Structure du projet
 
@@ -80,13 +77,11 @@ src/
     games.service.js      # Logique métier des jeux
     books.service.js      # Logique métier des livres
   routes/
-    games.js              # Définition des routes jeux
     books.js              # Définition des routes livres
   index.js                # Point d'entrée Express
-  queries.js              # Fonctions de requêtes (legacy)
+  queries.js              # Fonctions de requêtes
 
 views/
-  games.ejs               # Interface CRUD des jeux
   index.ejs               # Interface CRUD des livres
 
 tests/
@@ -108,15 +103,6 @@ Le projet suit une **architecture MVC en couches** :
 3. **Controller Layer** (`controllers/`) - Gestion des requêtes/réponses HTTP
 4. **Route Layer** (`routes/`) - Définition des endpoints
 5. **View Layer** (`views/`) - Templates EJS
-
-### Design Patterns appliqués
-
-- **MVC** : Séparation Model-View-Controller
-- **Singleton** : Connexion MongoDB unique
-- **Service Layer** : Isolation de la logique métier
-- **Dependency Injection** : Injection via require
-- **Single Responsibility Principle** : Une responsabilité par module
-- **DRY** : Éviter la duplication de code
 
 ## Tests
 
@@ -160,18 +146,6 @@ Données de gestion de livres :
 - `année` : Année de publication (requis, > 1900)
 - `genre` : Genre du livre (optionnel)
 
-## Exercices
-
-Les exercices sont documentés dans des fichiers markdown :
-
-- `Exercice1_find-simple.md` - Requêtes de base MongoDB
-- `Exercice2_insert-schema.md` - Insertion et schémas de validation
-
-Chaque exercice contient :
-1. Description des opérations requises
-2. Complexité progressive des requêtes
-3. Filtres, projections, tris et limites
-
 ## Technologies utilisées
 
 - **Node.js** - Runtime JavaScript
@@ -181,7 +155,3 @@ Chaque exercice contient :
 - **Jest** - Tests unitaires
 - **Cypress 15.7.0** - Tests E2E
 - **PM2** - Gestionnaire de processus
-
-## Licence
-
-Projet éducatif - Node.js Course Exercise
