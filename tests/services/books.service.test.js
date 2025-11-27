@@ -318,4 +318,161 @@ describe('Books Service', () => {
       await expect(booksService.createBook(bookData)).rejects.toThrow('Le titre est requis');
     });
   });
+
+  describe('createManyBooks', () => {
+    const { getDb } = require('../../src/config/db');
+
+    afterEach(async () => {
+      const db = getDb();
+      await db.collection('livre').deleteMany({ titre: /^Test Book/ });
+    });
+
+    it('should insert multiple books successfully', async () => {
+      const booksData = [
+        { titre: 'Test Book 1', auteur: 'Author 1', année: 2020 },
+        { titre: 'Test Book 2', auteur: 'Author 2', année: 2021, genre: 'Fiction' },
+        { titre: 'Test Book 3', auteur: 'Author 1', année: 2022 }
+      ];
+
+      const result = await booksService.createManyBooks(booksData);
+
+      expect(result.insertedCount).toBe(3);
+      expect(result.acknowledged).toBe(true);
+    });
+
+    it('should throw error if input is not an array', async () => {
+      await expect(booksService.createManyBooks({}))
+        .rejects
+        .toThrow('Un tableau de livres non vide est requis');
+    });
+
+    it('should throw error if array is empty', async () => {
+      await expect(booksService.createManyBooks([]))
+        .rejects
+        .toThrow('Un tableau de livres non vide est requis');
+    });
+
+    it('should throw error if titre is missing in any book', async () => {
+      const booksData = [
+        { auteur: 'Author 1', année: 2020 }
+      ];
+
+      await expect(booksService.createManyBooks(booksData))
+        .rejects
+        .toThrow('Le titre est requis pour le livre à l\'index 0');
+    });
+
+    it('should throw error if auteur is missing in any book', async () => {
+      const booksData = [
+        { titre: 'Book 1', année: 2020 }
+      ];
+
+      await expect(booksService.createManyBooks(booksData))
+        .rejects
+        .toThrow('L\'auteur est requis pour le livre à l\'index 0');
+    });
+
+    it('should throw error if année is invalid', async () => {
+      const booksData = [
+        { titre: 'Book 1', auteur: 'Author 1', année: 'invalid' }
+      ];
+
+      await expect(booksService.createManyBooks(booksData))
+        .rejects
+        .toThrow('L\'année doit être un nombre valide pour le livre à l\'index 0');
+    });
+
+    it('should throw error if année is <= 1900', async () => {
+      const booksData = [
+        { titre: 'Book 1', auteur: 'Author 1', année: 1900 }
+      ];
+
+      await expect(booksService.createManyBooks(booksData))
+        .rejects
+        .toThrow('L\'année doit être supérieure à 1900 pour le livre à l\'index 0');
+    });
+  });
+
+  describe('deleteBookByTitle', () => {
+    const { getDb } = require('../../src/config/db');
+
+    afterEach(async () => {
+      const db = getDb();
+      await db.collection('livre').deleteMany({ titre: /^Test/ });
+    });
+
+    it('should delete a book by its title', async () => {
+      await booksService.createBook({ titre: 'Test Delete Book', auteur: 'Test Author', année: 2020 });
+
+      const result = await booksService.deleteBookByTitle('Test Delete Book');
+
+      expect(result.deletedCount).toBe(1);
+      expect(result.acknowledged).toBe(true);
+    });
+
+    it('should return deletedCount 0 if book not found', async () => {
+      const result = await booksService.deleteBookByTitle('Non-existent Book');
+
+      expect(result.deletedCount).toBe(0);
+    });
+
+    it('should throw error if titre is empty', async () => {
+      await expect(booksService.deleteBookByTitle(''))
+        .rejects
+        .toThrow('Le titre est requis pour la suppression');
+    });
+
+    it('should trim whitespace from titre', async () => {
+      await booksService.createBook({ titre: 'Test Trim Book', auteur: 'Test Author', année: 2020 });
+
+      const result = await booksService.deleteBookByTitle('  Test Trim Book  ');
+
+      expect(result.deletedCount).toBe(1);
+    });
+  });
+
+  describe('deleteBooksByAuthor', () => {
+    const { getDb } = require('../../src/config/db');
+
+    afterEach(async () => {
+      const db = getDb();
+      await db.collection('livre').deleteMany({ auteur: /J\.K\. Rowling|Test Author/ });
+    });
+
+    it('should delete all books by an author', async () => {
+      await booksService.createManyBooks([
+        { titre: 'HP Book 1', auteur: 'J.K. Rowling', année: 2020 },
+        { titre: 'HP Book 2', auteur: 'J.K. Rowling', année: 2021 },
+        { titre: 'Other Book', auteur: 'Other Author', année: 2022 }
+      ]);
+
+      const result = await booksService.deleteBooksByAuthor('J.K. Rowling');
+
+      expect(result.deletedCount).toBe(2);
+      expect(result.acknowledged).toBe(true);
+    });
+
+    it('should return deletedCount 0 if author not found', async () => {
+      const result = await booksService.deleteBooksByAuthor('Non-existent Author');
+
+      expect(result.deletedCount).toBe(0);
+    });
+
+    it('should throw error if auteur is empty', async () => {
+      await expect(booksService.deleteBooksByAuthor(''))
+        .rejects
+        .toThrow('L\'auteur est requis pour la suppression');
+    });
+
+    it('should trim whitespace from auteur', async () => {
+      await booksService.createManyBooks([
+        { titre: 'Test Book 1', auteur: 'Test Author', année: 2020 },
+        { titre: 'Test Book 2', auteur: 'Test Author', année: 2021 }
+      ]);
+
+      const result = await booksService.deleteBooksByAuthor('  Test Author  ');
+
+      expect(result.deletedCount).toBe(2);
+    });
+  });
 });

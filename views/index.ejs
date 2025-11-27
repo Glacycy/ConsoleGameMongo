@@ -49,6 +49,41 @@
       </form>
     </div>
 
+    <div class="add-form">
+      <h2>Ajouter plusieurs livres (JSON)</h2>
+      <form action="/books/add-many" method="POST">
+        <div class="form-group">
+          <label for="books">Livres (format JSON) *</label>
+          <textarea id="books" name="books" required placeholder='[{"titre":"Titre1","auteur":"Auteur1","année":2020},{"titre":"Titre2","auteur":"Auteur2","année":2021,"genre":"Fiction"}]'></textarea>
+          <small>Format: tableau JSON avec titre, auteur, année (obligatoires) et genre (optionnel)</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter les livres</button>
+      </form>
+    </div>
+
+    <div class="add-form">
+      <h2>Supprimer par titre</h2>
+      <form action="/books/delete-by-title" method="POST">
+        <div class="form-group">
+          <label for="titre-delete">Titre du livre *</label>
+          <input type="text" id="titre-delete" name="titre" required>
+        </div>
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</button>
+      </form>
+    </div>
+
+    <div class="add-form">
+      <h2>Supprimer par auteur</h2>
+      <form action="/books/delete-by-author" method="POST">
+        <div class="form-group">
+          <label for="auteur-delete">Auteur *</label>
+          <input type="text" id="auteur-delete" name="auteur" required>
+          <small>Supprime TOUS les livres de cet auteur</small>
+        </div>
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer TOUS les livres de cet auteur ?')">Supprimer tous</button>
+      </form>
+    </div>
+
     <% if (books.length > 0) { %>
       <table class="books-table">
         <thead>
