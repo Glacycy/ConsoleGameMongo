@@ -1,4 +1,4 @@
-const { connect, disconnect, getDb } = require('../src/db');
+const { connect, disconnect, getDb } = require('../src/config/db');
 
 describe('Database Connection', () => {
   afterEach(async () => {

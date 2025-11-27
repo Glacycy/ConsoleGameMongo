@@ -1,4 +1,4 @@
-const { connect, disconnect } = require('../src/db');
+const { connect, disconnect } = require('../src/config/db');
 const {
   getGamesBy3DS,
   getGamesBy3DSIn2011,

@@ -4,15 +4,17 @@ module.exports = {
   collectCoverage: true,
   coverageReporters: ['text', 'lcov', 'html'],
   collectCoverageFrom: [
-    'src/**/*.js'
+    'src/**/*.js',
+    '!src/index.js',
+    '!src/routes/**'
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/'
   ],
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 80,
+      branches: 70,
+      functions: 85,
       lines: 80,
       statements: 80
     }

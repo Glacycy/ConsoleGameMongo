@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livres - Gestion</title>
+</head>
+<body>
+  <div class="container">
+
+    <h1>Gestion des Livres</h1>
+    <p class="subtitle">Base de données de la bibliothèque</p>
+
+    <% if (error) { %>
+      <div class="message error"><%= error %></div>
+    <% } %>
+
+    <% if (success) { %>
+      <div class="message success"><%= success %></div>
+    <% } %>
+
+    <div class="add-form">
+      <h2>Ajouter un livre</h2>
+      <form action="/books/add" method="POST">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="titre">Titre *</label>
+            <input type="text" id="titre" name="titre" required>
+          </div>
+
+          <div class="form-group">
+            <label for="auteur">Auteur *</label>
+            <input type="text" id="auteur" name="auteur" required>
+          </div>
+
+          <div class="form-group">
+            <label for="année">Année *</label>
+            <input type="number" id="année" name="année" required min="1901">
+            <small>Doit être supérieure à 1900</small>
+          </div>
+
+          <div class="form-group">
+            <label for="genre">Genre</label>
+            <input type="text" id="genre" name="genre" placeholder="Optionnel">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Ajouter le livre</button>
+      </form>
+    </div>
+
+    <% if (books.length > 0) { %>
+      <table class="books-table">
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Auteur</th>
+            <th>Année</th>
+            <th>Genre</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% books.forEach(book => { %>
+            <tr>
+              <td><strong><%= book.titre %></strong></td>
+              <td><%= book.auteur %></td>
+              <td><%= book.année %></td>
+              <td><%= book.genre || '-' %></td>
+              <td>
+                <form action="/books/delete/<%= book._id %>" method="POST" style="display: inline;">
+                  <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="no-books">Aucun livre trouvé dans la bibliothèque.</div>
+    <% } %>
+  </div>
+</body>
+</html>

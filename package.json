@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
+    "test:e2e": "pm2 start src/index.js & npm run cypress:run",
+    "cypress:run": "cypress run",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -11,7 +14,10 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "devDependencies": {
+  "dependencies": {
+    "cypress": "^15.7.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
     "jest": "^30.2.0",
     "mongodb": "^7.0.0"
   }
