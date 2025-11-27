@@ -62,7 +62,7 @@ L'application sera accessible sur `http://localhost:3000`
 - `GET /games` - Liste tous les jeux (100 max)
 - `GET /games/:platform` - Filtrer par plateforme (ex: `/games/3DS`)
 - `GET /games/:platform/:year` - Filtrer par plateforme et année
-- `GET /games/:platform/:year/top3` - Top 3 des jeux par ventes
+- `GET /games/:platform/:year/top3` - Top 3 des jeux par vente
 
 ## Structure du projet
 
